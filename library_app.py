@@ -334,21 +334,21 @@ class UserList:
 
  
  
- 
+
 class Loans:
     """Represents a list of loans.
 
     Attributes:
-        loans (dict): A dictionary storing loans by book IDs.
+        loans (dict): A dictionary storing loans by book IDs, where each entry has the structure {book_id: (user, borrow_date)}.
     """
- 
+
     def __init__(self):
         """Constructs a new Loans object."""
         self.loans = {}
-    
+
     def borrow_book(self, user, book):
         """Assigns a book to a user.
-    
+
         Args:
             user (User): The user object borrowing the book.
             book (Book): The book object being borrowed.
@@ -357,48 +357,67 @@ class Loans:
             raise ValueError("Book is not available")
         if book.get_book_id() in self.loans:
             raise ValueError("Book is already borrowed")
-        self.loans[book.get_book_id()] = user
+        
+        borrow_date = datetime.datetime.now().date()
+        self.loans[book.get_book_id()] = (user, borrow_date)
         book.set_num_available_copies(book.get_num_available_copies() - 1)
-    
+
     def return_book(self, book):
         """Un-assigns a book from a user.
-    
+
         Args:
             book (Book): The book object being returned.
         """
         if book.get_book_id() not in self.loans:
             raise ValueError("Book is not currently borrowed")
+        
         del self.loans[book.get_book_id()]
         book.set_num_available_copies(book.get_num_available_copies() + 1)
-    
+
     def count_user_loans(self, user):
         """Counts the number of books a user is currently borrowing.
-    
+
         Args:
             user (User): The user object.
-    
+
         Returns:
             int: The number of books borrowed by the user.
         """
-        return len([book for book in self.loans.values() if book == user])
-    
+        return len([loan_user for loan_user, _ in self.loans.values() if loan_user == user])
+
+
+    def is_overdue(self, borrow_date, current_date, loan_duration=14):
+        """Determines if a book is overdue based on the borrow date and loan duration.
+
+        Args:
+            borrow_date (datetime.date): The date the book was borrowed.
+            current_date (datetime.date): The current date.
+            loan_duration (int): The number of days for which the loan is valid (default is 14 days).
+
+        Returns:
+            bool: True if the book is overdue, False otherwise.
+        """
+        due_date = borrow_date + datetime.timedelta(days=loan_duration)
+        return current_date > due_date
+
     def print_overdue_books(self, current_date):
         """Prints overdue books along with user information.
-    
+
         Args:
             current_date (datetime.date): The current date.
         """
-        overdue_books = []
-        # for book_id, user in self.loans.items():
-        #     # Implement logic to check if the book is overdue based on loan duration
-        #     if is_overdue(book_id, current_date):
-        #         overdue_books.append((book_id, user))
-        # if not overdue_books:
-        #     print("No overdue books.")
-        # else:
-        #     for book_id, user in overdue_books:
-        #         print(f"Book ID: {book_id}")
-        #         print(f"User: {user.get_username()} ({user.get_firstname()})")
+        overdue_books = [
+            (book_id, user) for book_id, (user, borrow_date) in self.loans.items()
+            if self.is_overdue(borrow_date, current_date)
+        ]
+
+        if not overdue_books:
+            print("No overdue books.")
+        else:
+            for book_id, user in overdue_books:
+                print(f"Book ID: {book_id}")
+                print(f"User: {user.get_username()} ({user.get_firstname()})")
+
         
         
         
