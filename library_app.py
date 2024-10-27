@@ -1,5 +1,6 @@
 import random
 import datetime
+import click
  
 class Book:
    """Represents a book object.
@@ -180,89 +181,98 @@ class BookList:
  
  
  
-import datetime
+
 class User:
-   """Represents a user object.
- 
-   Attributes:
-       username (str): The username of the user.
-       firstname (str): The first name of the user.
-       surname (str): The surname of the user.
-       house_number (int): The house number of the user's address.
-       street_name (str): The street name of the user's address.
-       postcode (str): The postcode of the user's address.
-       email_address (str): The email address of the user.
-       date_of_birth (datetime.date): The date of birth of the user.
-   """
- 
-   def __init__(self, username, firstname, surname, house_number, street_name, postcode, email_address, date_of_birth):
-       """Constructs a new User object.
- 
-       Args:
-           username (str): The username of the user.
-           firstname (str): The first name of the user.
-           surname (str): The surname of the user.
-           house_number (int): The house number of the user's address.
-           street_name (str): The street name of the user's address.
-           postcode (str): The postcode of the user's address.
-           email_address (str): The email address of the user.
-           date_of_birth (datetime.date): The date of birth of the user.
-       """
-       self.username = username
-       self.firstname = firstname
-       self.surname = surname
-       self.house_number = house_number
-       self.street_name = street_name
-       self.postcode = postcode
-       self.email_address = email_address
-       self.date_of_birth = date_of_birth
- 
-   # Getter methods
-   def get_username(self):
-       return self.username
- 
-   def get_firstname(self):
-       return self.firstname
- 
-   def get_surname(self):
-       return self.surname
- 
-   def get_house_number(self):
-       return self.house_number
- 
-   def get_street_name(self):
-       return self.street_name
- 
-   def get_postcode(self):
-       return self.postcode
- 
-   def get_email_address(self):
-       return self.email_address
- 
-   def get_date_of_birth(self):
-       return self.date_of_birth
- 
-   # Setter methods with error checking
-   def set_firstname(self, firstname):
-       if not isinstance(firstname, str):
-           raise ValueError("First name must be a string")
-       self.firstname = firstname
- 
-   def set_surname(self, surname):
-       if not isinstance(surname, str):
-           raise ValueError("Surname must be a string")
-       self.surname = surname
- 
-   def set_email_address(self, email_address):
-       # Implement email validation here (e.g., using a regular expression)
-       if not isinstance(email_address, str) or not email_address.endswith("@example.com"):
-           raise ValueError("Invalid email address")
-       self.email_address = email_address
- 
-   def set_date_of_birth(self, date_of_birth):
-       if not isinstance(date_of_birth, datetime.date):
-           raise ValueError("Date of birth must be a datetime.date object")
-       self.date_of_birth = date_of_birth
+    """Represents a user object.
+    
+    Attributes:
+        username (str): The username of the user.
+        firstname (str): The first name of the user.
+        surname (str): The surname of the user.
+        house_number (int): The house number of the user's address.
+        street_name (str): The street name of the user's address.
+        postcode (str): The postcode of the user's address.
+        email_address (str): The email address of the user.
+        date_of_birth (datetime.date): The date of birth of the user.
+    """
+    
+    def __init__(self, username, firstname, surname, house_number, street_name, postcode, email_address, date_of_birth):
+        """Constructs a new User object.
+    
+        Args:
+            username (str): The username of the user.
+            firstname (str): The first name of the user.
+            surname (str): The surname of the user.
+            house_number (int): The house number of the user's address.
+            street_name (str): The street name of the user's address.
+            postcode (str): The postcode of the user's address.
+            email_address (str): The email address of the user.
+            date_of_birth (datetime.date): The date of birth of the user.
+        """
+        self.username = username
+        self.firstname = firstname
+        self.surname = surname
+        self.house_number = house_number
+        self.street_name = street_name
+        self.postcode = postcode
+        self.email_address = email_address
+        self.date_of_birth = date_of_birth
+    
+    # Getter methods
+    def get_username(self):
+        return self.username
+    
+    def get_firstname(self):
+        return self.firstname
+    
+    def get_surname(self):
+        return self.surname
+    
+    def get_house_number(self):
+        return self.house_number
+    
+    def get_street_name(self):
+        return self.street_name
+    
+    def get_postcode(self):
+        return self.postcode
+    
+    def get_email_address(self):
+        return self.email_address
+    
+    def get_date_of_birth(self):
+        return self.date_of_birth
+    
+    # Setter methods with error checking
+    def set_firstname(self, firstname):
+        if not isinstance(firstname, str):
+            raise ValueError("First name must be a string")
+        self.firstname = firstname
+    
+    def set_surname(self, surname):
+        if not isinstance(surname, str):
+            raise ValueError("Surname must be a string")
+        self.surname = surname
+    
+    def set_email_address(self, email_address):
+        # Implement email validation here (e.g., using a regular expression)
+        if not isinstance(email_address, str) or not email_address.endswith("@example.com"):
+            raise ValueError("Invalid email address")
+        self.email_address = email_address
+    
+    def set_date_of_birth(self, date_of_birth):
+        if not isinstance(date_of_birth, datetime.date):
+            raise ValueError("Date of birth must be a datetime.date object")
+        self.date_of_birth = date_of_birth
+        
+    def set_street_name(self, street_name):
+        self.street_name = street_name
+        
+    def set_house_number(self, street_number):
+        self.street_number = street_number
+        
+    def set_postcode(self, postcode):
+        self.postcode = postcode
  
  
  
@@ -372,28 +382,27 @@ class Loans:
         """
         return len([book for book in self.loans.values() if book == user])
     
-    # def print_overdue_books(self, current_date):
-    #     """Prints overdue books along with user information.
+    def print_overdue_books(self, current_date):
+        """Prints overdue books along with user information.
     
-    #     Args:
-    #         current_date (datetime.date): The current date.
-    #     """
-    #     overdue_books = []
-    #     for book_id, user in self.loans.items():
-    #         # Implement logic to check if the book is overdue based on loan duration
-    #         if is_overdue(book_id, current_date):
-    #             overdue_books.append((book_id, user))
-    #     if not overdue_books:
-    #         print("No overdue books.")
-    #     else:
-    #         for book_id, user in overdue_books:
-    #             print(f"Book ID: {book_id}")
-    #             print(f"User: {user.get_username()} ({user.get_firstname()})")
+        Args:
+            current_date (datetime.date): The current date.
+        """
+        overdue_books = []
+        # for book_id, user in self.loans.items():
+        #     # Implement logic to check if the book is overdue based on loan duration
+        #     if is_overdue(book_id, current_date):
+        #         overdue_books.append((book_id, user))
+        # if not overdue_books:
+        #     print("No overdue books.")
+        # else:
+        #     for book_id, user in overdue_books:
+        #         print(f"Book ID: {book_id}")
+        #         print(f"User: {user.get_username()} ({user.get_firstname()})")
         
         
         
- 
-import click
+
  
 def modify_book(book):
    """Modifies a book's attributes from the command line."""
@@ -419,7 +428,7 @@ def modify_user(user):
  
    user.set_firstname(new_firstname)
    user.set_surname(new_surname)
-   #user.set_house_number(new_house_number)
+   user.set_house_number(new_house_number)
    user.set_street_name(new_street_name)
    user.set_postcode(new_postcode)
  
